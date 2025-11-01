@@ -24,20 +24,11 @@ import { ELocales, isRuLocale } from '@/shared/constants/locale'
 import { getDaysInMonth, findFirstDayIndex } from '@/features/DateSelectComponent/models/dateUtils'
 
 const TILES_LENGTH = 42
-const props = defineProps({
-  modelValue: {
-    type: Date,
-    required: true,
-  },
-  dateToDisplay: {
-    type: Date,
-    required: true,
-  },
-  selectedLocale: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  modelValue: Date
+  dateToDisplay: Date
+  selectedLocale: ELocales
+}>()
 const emit = defineEmits<{ (e: 'update:modelValue', newDate: Date): void }>()
 const computedDaysLength = computed((): number => getDaysInMonth(props.dateToDisplay))
 const computedFirstDayIndex = computed((): number =>
