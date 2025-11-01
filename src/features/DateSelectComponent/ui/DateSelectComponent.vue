@@ -11,7 +11,11 @@
         'day--selected': isDaySelected(index - 1),
       }"
     >
-      <span v-if="!isTileEmpty(index - 1)" @click="onClickHandler(index - 1)">
+      <span
+        class="day__content-wrapper"
+        v-if="!isTileEmpty(index - 1)"
+        @click="onClickHandler(index - 1)"
+      >
         {{ index - computedFirstDayIndex }}
       </span>
     </div>
@@ -95,7 +99,17 @@ const onClickHandler = (tileIndex: number) => {
   gap: 4px;
 }
 .day--selected {
-  background-color: #007bff;
+  background-color: pink;
   color: white;
+}
+.day {
+  border-radius: 4px;
+}
+.day__content-wrapper {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 8px 0;
+  cursor: pointer;
 }
 </style>

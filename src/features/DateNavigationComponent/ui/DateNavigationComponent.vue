@@ -1,10 +1,10 @@
 <template>
   <div class="navs">
-    <div @click="navigate(-1)">prev</div>
+    <div class="button" @click="navigate(-1)">prev</div>
     <div>{{ displayedDate }}</div>
-    <div @click="navigate(1)">next</div>
+    <div class="button" @click="navigate(1)">next</div>
   </div>
-  <div class="locale" @click="emit('switch-locale')">Переключить локаль</div>
+  <div class="locale button" @click="emit('switch-locale')">Переключить локаль</div>
 </template>
 
 <script setup lang="ts">
@@ -41,3 +41,22 @@ const navigate = (direction: number) => {
   displayedDate.value = new Date(newDate.getFullYear(), newDate.getMonth() + direction, 1)
 }
 </script>
+
+<style scoped>
+.navs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 5px;
+}
+.button {
+  padding: 4px 8px;
+  border: 1px solid pink;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: pink;
+}
+</style>

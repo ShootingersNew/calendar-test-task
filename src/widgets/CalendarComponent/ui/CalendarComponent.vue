@@ -1,14 +1,16 @@
 <template>
-  <DateNavigationComponent
-    v-model="dateToDisplay"
-    @switch-locale="switchLocale"
-    :selected-locale="selectedLocale"
-  />
-  <DateSelectComponent
-    v-model="selectedDate"
-    :selected-locale="selectedLocale"
-    :date-to-display="dateToDisplay"
-  />
+  <div class="calendar">
+    <DateNavigationComponent
+      v-model="dateToDisplay"
+      @switch-locale="switchLocale"
+      :selected-locale="selectedLocale"
+    />
+    <DateSelectComponent
+      v-model="selectedDate"
+      :selected-locale="selectedLocale"
+      :date-to-display="dateToDisplay"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import { DateSelectComponent } from '@/features/DateSelectComponent/ui'
@@ -39,3 +41,14 @@ const selectedDate = computed<Date>({
   },
 })
 </script>
+
+<style scoped>
+.calendar {
+  width: 300px;
+  border: 1px solid pink;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+</style>
