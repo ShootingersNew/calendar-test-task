@@ -1,22 +1,33 @@
 <template>
-  <div @click="navigate(-1)">left</div>
-  <div>{{ displayedDate }}</div>
-  <div @click="navigate(1)">right</div>
+  <div class="navs">
+    <div @click="navigate(-1)">prev</div>
+    <div>{{ displayedDate }}</div>
+    <div @click="navigate(1)">next</div>
+  </div>
+  <div class="locale" @click="emit('switch-locale')">Переключить локаль</div>
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   modelValue: {
     type: Date,
     required: true,
   },
+  selectedLocale: {
+    type: String,
+    required: false,
+  },
 })
-const emit = defineEmits<{ (e: 'update:modelValue', newDate: Date): void }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', newDate: Date): void
+  (e: 'switch-locale'): void
+}>()
+
 const displayedDate = computed({
   get: () =>
-    props.modelValue.toLocaleDateString('en-US', {
+    props.modelValue.toLocaleDateString(props.selectedLocale || 'en-US', {
       month: 'long',
       year: 'numeric',
     }),

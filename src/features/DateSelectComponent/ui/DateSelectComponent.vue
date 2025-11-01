@@ -20,7 +20,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ELocales, isRuLocale } from '@/shared/constants/locale'
+import { getDaysInMonth, findFirstDayIndex } from '@/features/DateSelectComponent/models/dateUtils'
 
+const TILES_LENGTH = 42
 const props = defineProps({
   modelValue: {
     type: Date,
@@ -30,27 +33,34 @@ const props = defineProps({
     type: Date,
     required: true,
   },
+  selectedLocale: {
+    type: String,
+    required: true,
+  },
 })
 const emit = defineEmits<{ (e: 'update:modelValue', newDate: Date): void }>()
 const computedDaysLength = computed((): number => getDaysInMonth(props.dateToDisplay))
-const computedFirstDayIndex = computed((): number => findFirstDayIndex(props.dateToDisplay))
+const computedFirstDayIndex = computed((): number =>
+  findFirstDayIndex(props.dateToDisplay, weekStart.value),
+)
 const computedSelectedDate = computed<Date>({
   get: () => props.modelValue,
   set: (newDate: Date) => {
-    console.log('emitting new date:', newDate)
     emit('update:modelValue', newDate)
   },
 })
-const dayTitles = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const weekStart = computed(() => (isRuLocale(props.selectedLocale) ? 1 : 0))
 
-const TILES_LENGTH = 42
+const dayTitles = computed((): string[] => {
+  const locale = weekStart.value ? ELocales.RU : ELocales.EN
+  const formatting = new Intl.DateTimeFormat(locale, { weekday: 'short' })
+  const firstSunday = 4
+  return Array.from({ length: 7 }, (_, i) => {
+    const offset = (i + weekStart.value) % 7
+    return formatting.format(new Date(1970, 0, firstSunday + offset))
+  })
+})
 
-const getDaysInMonth = (date: Date): number => {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-}
-const findFirstDayIndex = (date: Date): number => {
-  return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
-}
 const isTileEmpty = (index: number): boolean => {
   return (
     index < computedFirstDayIndex.value ||
