@@ -1,14 +1,14 @@
 <template>
   <div class="calendar">
     <DateNavigationComponent
-      v-model="dateToDisplay"
+      v-model="computedDateToDisplay"
       @switch-locale="switchLocale"
       :selected-locale="selectedLocale"
     />
     <DateSelectComponent
-      v-model="selectedDate"
+      v-model="computedSelectedDate"
       :selected-locale="selectedLocale"
-      :date-to-display="dateToDisplay"
+      :date-to-display="computedDateToDisplay"
     />
   </div>
 </template>
@@ -17,27 +17,37 @@ import { DateSelectComponent } from '@/features/DateSelectComponent/ui'
 import { DateNavigationComponent } from '@/features/DateNavigationComponent/ui'
 import { computed, ref } from 'vue'
 import { ELocales } from '@/shared/constants/locale'
+import { toDate, formatModelValue, getTodayString } from '@/shared/utils/modelDate'
 
 const props = defineProps({
   modelValue: {
-    type: Date,
-    default: () => new Date(),
+    type: String,
+    default: () => getTodayString(),
   },
 })
 const emit = defineEmits<{
-  (e: 'update:modelValue', newValue: Date): void
-  (e: 'on-date-select', newValue: Date): void
+  (e: 'update:modelValue', newValue: string): void
+  (e: 'on-date-select', newValue: string): void
 }>()
 const selectedLocale = ref<ELocales>(ELocales.RU)
-const dateToDisplay = ref<Date>(props.modelValue)
 const switchLocale = () => {
   selectedLocale.value = selectedLocale.value === ELocales.RU ? ELocales.EN : ELocales.RU
 }
-const selectedDate = computed<Date>({
-  get: () => props.modelValue,
+
+const computedDateToDisplay = computed<Date>({
+  get: () => toDate(props.modelValue as string),
   set: (newDate: Date) => {
-    emit('on-date-select', newDate)
-    emit('update:modelValue', newDate)
+    const res = formatModelValue(newDate)
+    emit('update:modelValue', res)
+  },
+})
+
+const computedSelectedDate = computed<Date>({
+  get: () => toDate(props.modelValue as string),
+  set: (newDate: Date) => {
+    const res = formatModelValue(newDate)
+    emit('on-date-select', res)
+    emit('update:modelValue', res)
   },
 })
 </script>

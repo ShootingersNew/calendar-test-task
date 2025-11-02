@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { CalendarComponent } from './widgets/CalendarComponent/ui'
-const date = defineModel<Date>('date', {
-  type: Date,
-  default: () => new Date(),
+import { getTodayString } from '@/shared/utils/modelDate'
+const date = defineModel<string>('date', {
+  type: String,
+  default: () => getTodayString(),
 })
-const clickHandler = (newDate: Date) => {
+const clickHandler = (newDate: string) => {
   console.log('По заданию нужно было, чтобы календарь по клику отдавал дату', newDate)
 }
 </script>
