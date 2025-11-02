@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { DateSelectComponent } from '@/features/DateSelectComponent/ui'
 import { DateNavigationComponent } from '@/features/DateNavigationComponent/ui'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { ELocales } from '@/shared/constants/locale'
 import { toDate, formatModelValue, getTodayString } from '@/shared/utils/modelDate'
 
@@ -34,22 +34,30 @@ const switchLocale = () => {
   selectedLocale.value = selectedLocale.value === ELocales.RU ? ELocales.EN : ELocales.RU
 }
 
+const dateToDisplay = ref<Date>(toDate(props.modelValue))
+
 const computedDateToDisplay = computed<Date>({
-  get: () => toDate(props.modelValue as string),
+  get: () => dateToDisplay.value,
   set: (newDate: Date) => {
-    const res = formatModelValue(newDate)
-    emit('update:modelValue', res)
+    dateToDisplay.value = newDate
   },
 })
 
 const computedSelectedDate = computed<Date>({
-  get: () => toDate(props.modelValue as string),
+  get: () => toDate(props.modelValue),
   set: (newDate: Date) => {
     const res = formatModelValue(newDate)
     emit('on-date-select', res)
     emit('update:modelValue', res)
   },
 })
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) dateToDisplay.value = toDate(val)
+  },
+)
 </script>
 
 <style scoped>
